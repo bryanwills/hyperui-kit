@@ -1,8 +1,6 @@
 export default function Ad({ isCenter = false }) {
   return (
-    <div
-      className={`not-prose max-w-lg max-[1300px]:min-h-[146px] ${isCenter && 'mx-auto text-center'}`}
-    >
+    <div className={`not-prose max-w-lg ${isCenter && 'mx-auto text-center'}`}>
       <div
         data-ea-publisher="hyperuidev"
         data-ea-type="image"

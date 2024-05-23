@@ -3,18 +3,12 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-import { useInterval } from 'react-use'
-
 export default function Ads() {
   const routerPathname = usePathname()
 
   useEffect(() => {
     loadAd()
   }, [routerPathname])
-
-  useInterval(() => {
-    loadAd()
-  }, 30000)
 
   useEffect(() => {
     document.addEventListener('preview:clicked', loadAd)
