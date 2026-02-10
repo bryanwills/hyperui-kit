@@ -16,8 +16,6 @@ const [application, marketing, neobrutalism] = (
 ).map((collection) =>
   collection.map(({ data }) => data).sort((a, b) => a.title.localeCompare(b.title))
 )
-
-const components = [...application, ...marketing, ...neobrutalism]
 ---
 
 <BaseLayout description={SEO_DESCRIPTION_SITE} title={SEO_TITLE_SITE}>
