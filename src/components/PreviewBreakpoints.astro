@@ -1,6 +1,5 @@
 ---
 interface Breakpoint {
-  emoji: string
   name: string
   width: string
 }
@@ -13,17 +12,16 @@ interface Props {
 const { breakpoints, src } = Astro.props
 ---
 
-<preview-breakpoints data-src={src} class="hidden flex-1 justify-end gap-2 md:flex">
+<preview-breakpoints data-src={src} class="hidden items-center gap-1 md:flex">
   {
-    breakpoints.map(({ emoji, name, width }) => (
+    breakpoints.map(({ name, width }) => (
       <button
         data-breakpoint={width}
         aria-pressed={width === '100%' ? 'true' : 'false'}
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2 font-medium shadow-sm focus:ring-2 focus:ring-pink-500 focus:outline-0"
+        class="inline-flex items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-black aria-pressed:text-white"
       >
-        <span aria-hidden="true">{emoji}</span>
-        <span>{name}</span>
+        {name}
       </button>
     ))
   }
@@ -45,15 +43,16 @@ const { breakpoints, src } = Astro.props
         return
       }
 
-      const buttonEls = [...this.querySelectorAll('button[data-breakpoint]')] as HTMLButtonElement[]
+      const buttonEls = [...this.querySelectorAll<HTMLButtonElement>('button[data-breakpoint]')]
 
       if (buttonEls.length === 0) {
         return
       }
 
       this.activeButton =
-        buttonEls.find((buttonEl) => buttonEl.getAttribute('aria-pressed') === 'true') ||
-        buttonEls.at(-1)!
+        buttonEls.find((buttonEl) => buttonEl.getAttribute('aria-pressed') === 'true') ??
+        buttonEls[buttonEls.length - 1] ??
+        null
 
       this.clickHandler = (clickEvent) => this.handleButtonClick(clickEvent)
 
@@ -66,7 +65,7 @@ const { breakpoints, src } = Astro.props
       }
 
       const targetEl = clickEvent.target as HTMLElement
-      const buttonEl = targetEl.closest('button[data-breakpoint]') as HTMLButtonElement | null
+      const buttonEl = targetEl.closest<HTMLButtonElement>('button[data-breakpoint]')
 
       if (!buttonEl) {
         return
@@ -74,7 +73,7 @@ const { breakpoints, src } = Astro.props
 
       this.isProcessing = true
 
-      const width = buttonEl.getAttribute('data-breakpoint')
+      const width = buttonEl.getAttribute('data-breakpoint')!
 
       if (this.activeButton && this.activeButton !== buttonEl) {
         this.activeButton.setAttribute('aria-pressed', 'false')

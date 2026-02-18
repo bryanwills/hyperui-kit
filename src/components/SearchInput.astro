@@ -1,14 +1,47 @@
 <search-input>
-  <label for="search">
+  <label for="search" class="relative block">
+    <span class="sr-only"> Search </span>
+
+    <span
+      class="pointer-events-none absolute inset-y-0 left-0 inline-flex size-9 items-center justify-center text-gray-400"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="size-4"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </span>
+
     <input
       id="search"
       type="text"
       placeholder="Search..."
-      class="h-10 w-screen max-w-xs rounded-lg border border-stone-300 bg-white pr-10 text-stone-900 placeholder-stone-500 shadow-sm focus:ring-2 focus:ring-pink-500 focus:outline-0"
+      class="peer w-full rounded-md border-gray-200 bg-white px-9 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-50 md:w-64"
       autocomplete="off"
     />
 
-    <span class="sr-only"> Search </span>
+    <button
+      type="button"
+      aria-label="Clear"
+      class="absolute inset-y-0 right-0 inline-flex size-9 items-center justify-center text-gray-400 transition-opacity peer-placeholder-shown:opacity-0 hover:text-gray-600"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="size-5"
+      >
+        <path
+          d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"
+        ></path>
+      </svg>
+    </button>
   </label>
 </search-input>
 
@@ -16,15 +49,25 @@
   class SearchInput extends HTMLElement {
     private inputHandler: (() => void) | null = null
     private keydownHandler: ((keyboardEvent: KeyboardEvent) => void) | null = null
+    private clearHandler: (() => void) | null = null
+
+    private updateButtonState(inputEl: HTMLInputElement, buttonEl: HTMLButtonElement) {
+      buttonEl.disabled = !inputEl.value
+    }
 
     connectedCallback() {
-      const inputEl = this.querySelector('input') as HTMLInputElement | null
+      const inputEl = this.querySelector('input')
+      const buttonEl = this.querySelector('button')
 
-      if (!inputEl) {
+      if (!inputEl || !buttonEl) {
         return
       }
 
+      this.updateButtonState(inputEl, buttonEl)
+
       this.inputHandler = () => {
+        this.updateButtonState(inputEl, buttonEl)
+
         this.dispatchEvent(
           new CustomEvent('input:search', {
             bubbles: true,
@@ -51,16 +94,29 @@
 
           return
         }
+      }
 
-        return
+      this.clearHandler = () => {
+        inputEl.value = ''
+
+        this.updateButtonState(inputEl, buttonEl)
+
+        this.dispatchEvent(
+          new CustomEvent('input:search', {
+            bubbles: true,
+            detail: { value: '' },
+          }),
+        )
       }
 
       inputEl.addEventListener('input', this.inputHandler)
       inputEl.addEventListener('keydown', this.keydownHandler)
+      buttonEl.addEventListener('click', this.clearHandler)
     }
 
     disconnectedCallback() {
-      const inputEl = this.querySelector('input') as HTMLInputElement | null
+      const inputEl = this.querySelector('input')
+      const buttonEl = this.querySelector('button')
 
       if (inputEl && this.inputHandler && this.keydownHandler) {
         inputEl.removeEventListener('input', this.inputHandler)
@@ -68,6 +124,12 @@
 
         this.inputHandler = null
         this.keydownHandler = null
+      }
+
+      if (buttonEl && this.clearHandler) {
+        buttonEl.removeEventListener('click', this.clearHandler)
+
+        this.clearHandler = null
       }
     }
   }

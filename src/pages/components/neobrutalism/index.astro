@@ -8,7 +8,7 @@ import {
 
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import ComponentCard from '../../../components/ComponentCard.astro'
-import Hero from '../../../components/Hero.astro'
+import BaseHero from '../../../components/BaseHero.astro'
 
 const components = (await getCollection('neobrutalism'))
   .map(({ data }) => data)
@@ -19,15 +19,15 @@ const components = (await getCollection('neobrutalism'))
   description={SEO_DESCRIPTION_NEOBRUTALISM_COMPONENTS}
   title={SEO_TITLE_NEOBRUTALISM_COMPONENTS}
 >
-  <Hero title="Neobrutalism" subtitle="Free Neobrutalism Tailwind CSS Components">
-    Bold, unpolished design components with stark contrasts and functional simplicity. Build
-    striking interfaces with neobrutalism's raw aesthetics using Tailwind CSS.
-  </Hero>
+  <BaseHero
+    title="Neobrutalism"
+    description="Free Tailwind CSS neobrutalism components that can be used in your next project."
+  />
 
-  <main id="main-content" class="mx-auto max-w-7xl px-4 pb-8">
+  <main id="main-content" class="mx-auto max-w-7xl px-4">
     <ul
       aria-label="Neobrutalism Components"
-      class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"
+      class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
     >
       {components.map((component) => <ComponentCard component={component} />)}
     </ul>

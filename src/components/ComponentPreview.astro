@@ -10,7 +10,7 @@ interface Props {
 const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
 ---
 
-<component-preview data-src={src} class="block">
+<component-preview data-src={src} class="block border-t border-gray-200">
   <iframe
     data-preview="true"
     src={src}
@@ -18,14 +18,14 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
     class:list={[
       wrapper,
       dark ? 'bg-gray-900' : 'bg-white',
-      'w-full rounded-xl shadow-sm ring ring-stone-300 transition-[max-width] duration-300 data-[preview=false]:hidden data-[preview=true]:block',
+      'mx-auto w-full ring ring-gray-200 transition-[max-width] duration-300 data-[preview=false]:hidden data-[preview=true]:block',
     ]}
     style="max-width: 100%;"
     loading={index === 1 && !dark ? 'eager' : 'lazy'}></iframe>
 
   <div
     data-preview="true"
-    class="prose prose-pre:m-0 prose-pre:rounded-xl prose-pre:shadow-sm max-w-none data-[preview=true]:hidden"
+    class="prose prose-pre:m-0 prose-pre:rounded-none max-w-none data-[preview=true]:hidden"
   >
     <pre data-html></pre>
   </div>
@@ -41,10 +41,10 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
     private iframeEl: HTMLIFrameElement | null = null
     private previewEl: HTMLPreElement | null = null
 
-    private breakpointHandler: ((breakpointEvent: Event) => void) | null = null
-    private copyHandler: ((copyEvent: Event) => void) | null = null
-    private directionHandler: ((directionEvent: Event) => void) | null = null
-    private viewHandler: ((viewEvent: Event) => void) | null = null
+    private breakpointHandler: ((event: CustomEvent<{ width: string }>) => void) | null = null
+    private copyHandler: (() => void) | null = null
+    private directionHandler: ((event: CustomEvent<{ ltr: boolean }>) => void) | null = null
+    private viewHandler: ((event: CustomEvent<{ previewing: boolean }>) => void) | null = null
 
     connectedCallback() {
       this.contentSrc = this.dataset.src || null
@@ -53,8 +53,8 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
         return
       }
 
-      this.iframeEl = this.querySelector('iframe') as HTMLIFrameElement | null
-      this.previewEl = this.querySelector('[data-html]') as HTMLPreElement | null
+      this.iframeEl = this.querySelector('iframe')
+      this.previewEl = this.querySelector('[data-html]')
 
       if (!this.iframeEl || !this.previewEl) {
         return
@@ -71,9 +71,12 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
         this.directionHandler &&
         this.viewHandler
       ) {
+        // @ts-expect-error -- CustomEvent handler is not assignable to EventListener
         document.removeEventListener(`breakpoint:change:${this.contentSrc}`, this.breakpointHandler)
         document.removeEventListener(`preview:copy:${this.contentSrc}`, this.copyHandler)
+        // @ts-expect-error -- CustomEvent handler is not assignable to EventListener
         document.removeEventListener(`preview:direction:${this.contentSrc}`, this.directionHandler)
+        // @ts-expect-error -- CustomEvent handler is not assignable to EventListener
         document.removeEventListener(`preview:view:${this.contentSrc}`, this.viewHandler)
 
         this.breakpointHandler = null
@@ -84,8 +87,8 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
     }
 
     private setupEventListeners() {
-      this.breakpointHandler = (breakpointEvent: Event) => {
-        const newWidth = (breakpointEvent as CustomEvent).detail.width
+      this.breakpointHandler = (breakpointEvent) => {
+        const newWidth = breakpointEvent.detail.width
 
         if (this.iframeEl) {
           this.iframeEl.style.maxWidth = newWidth
@@ -108,8 +111,8 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
         }
       }
 
-      this.directionHandler = (directionEvent: Event) => {
-        const isLtr = (directionEvent as CustomEvent).detail.ltr
+      this.directionHandler = (directionEvent) => {
+        const isLtr = directionEvent.detail.ltr
 
         if (this.iframeEl?.contentDocument) {
           this.iframeEl.contentDocument.documentElement.setAttribute('dir', isLtr ? 'ltr' : 'rtl')
@@ -118,8 +121,8 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
         }
       }
 
-      this.viewHandler = (viewEvent: Event) => {
-        const isPreviewing = (viewEvent as CustomEvent).detail.previewing
+      this.viewHandler = (viewEvent) => {
+        const isPreviewing = viewEvent.detail.previewing
 
         const previewEls = this.querySelectorAll('[data-preview]')
 
@@ -137,9 +140,12 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
       }
 
       if (this.contentSrc) {
+        // @ts-expect-error -- CustomEvent handler is not assignable to EventListener
         document.addEventListener(`breakpoint:change:${this.contentSrc}`, this.breakpointHandler)
         document.addEventListener(`preview:copy:${this.contentSrc}`, this.copyHandler)
+        // @ts-expect-error -- CustomEvent handler is not assignable to EventListener
         document.addEventListener(`preview:direction:${this.contentSrc}`, this.directionHandler)
+        // @ts-expect-error -- CustomEvent handler is not assignable to EventListener
         document.addEventListener(`preview:view:${this.contentSrc}`, this.viewHandler)
       }
     }
@@ -152,7 +158,7 @@ const { src, title, dark = false, index = 1, wrapper = '' } = Astro.props
       if (this.iframeEl?.contentDocument) {
         const docClone = this.iframeEl.contentDocument.cloneNode(true) as Document
 
-        this.contentHtml = this.sanitizeContent((docClone as Document).body.innerHTML)
+        this.contentHtml = this.sanitizeContent(docClone.body.innerHTML)
 
         return this.contentHtml
       }

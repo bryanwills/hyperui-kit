@@ -7,14 +7,15 @@ import PreviewRefs from './PreviewRefs.astro'
 import PreviewView from './PreviewView.astro'
 
 const breakpoints = [
-  { name: 'Mobile', emoji: '📱', width: '340px' },
-  { name: 'Small', emoji: '🐛', width: '640px' },
-  { name: 'Medium', emoji: '🦭', width: '768px' },
-  { name: 'Large', emoji: '🐴', width: '1024px' },
-  { name: 'Full', emoji: '🌕', width: '100%' },
+  { name: 'Mobile', width: '340px' },
+  { name: 'SM', width: '640px' },
+  { name: 'MD', width: '768px' },
+  { name: 'LG', width: '1024px' },
+  { name: 'Full', width: '100%' },
 ]
 
 interface Props {
+  id: string
   category: string
   contributors: string[]
   dark: boolean
@@ -22,27 +23,56 @@ interface Props {
   slug: string
   title: string
   wrapper: string
-  plugins?: string[]
+  plugins?: string[] | undefined
 }
 
-const { category, contributors, dark, index, slug, title, wrapper, plugins = [] } = Astro.props
+const { id, category, contributors, dark, index, slug, title, wrapper, plugins = [] } = Astro.props
 
 const src = dark
   ? `/components/${category}/${slug}/${index}-dark.html`
   : `/components/${category}/${slug}/${index}.html`
 ---
 
-<div class="space-y-4">
-  <div class="flex items-center gap-2">
-    <PreviewView src={src} />
-    <PreviewDirection src={src} />
-    <PreviewCopy src={src} />
+<div id={id} class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+  <div class="p-4">
+    <div class="flex items-center justify-between gap-4">
+      <a href={`#${id}`} class="group flex items-center gap-2">
+        <h3 class="text-lg font-medium text-gray-900">{title}</h3>
 
-    <PreviewBreakpoints src={src} breakpoints={breakpoints} />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-4 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-gray-900"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+          ></path>
+        </svg>
+      </a>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <PreviewBreakpoints src={src} breakpoints={breakpoints} />
+        <PreviewDirection src={src} />
+        <PreviewView src={src} />
+        <PreviewCopy src={src} />
+      </div>
+    </div>
+
+    <PreviewRefs url="https://github.com/" refs={contributors} />
   </div>
 
   <ComponentPreview src={src} index={index} title={title} wrapper={wrapper} dark={dark} />
 
-  <PreviewRefs title="Contributors" url="https://github.com/" refs={contributors} />
-  <PreviewRefs title="Plugins" url="https://www.npmjs.com/package/" refs={plugins || []} />
+  {
+    plugins.length ? (
+      <div class="border-t border-gray-200 px-4 py-2">
+        <PreviewRefs prefix="Plugins:" url="https://www.npmjs.com/package/" refs={plugins} />
+      </div>
+    ) : null
+  }
 </div>
