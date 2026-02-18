@@ -3,7 +3,7 @@ title: Contributing to HyperUI
 description: Learn how to get involved with HyperUI development, report issues, and add new components or collections.
 slug: how-to-contribute
 pubDate: 2022-07-26
-updatedDate: 2025-11-06
+updatedDate: 2026-02-18
 terms:
   - contribute
   - opensource
@@ -41,13 +41,13 @@ third review, that's fine—just address it as usual.
 
 ### Setting Up HyperUI Locally
 
-HyperUI runs on Next.js. To get started:
+HyperUI is built with Astro and uses Tailwind CSS v4. To get started:
 
 ```shell
 git clone git@github.com:markmead/hyperui.git
 pnpm install
 pnpm dev
-pnpm css --watch
+pnpm run css --watch
 ```
 
 ### Adding a New Component
@@ -56,7 +56,7 @@ For example, to add a new footer component in the marketing category:
 
 1. Create a new file in `/public/components/marketing/footers`.
 2. Add the component to the group in
-   `/src/data/components/marketing/footers.mdx`.
+   `/src/content/collection/marketing/footers.mdx`.
 
 Component files are named incrementally (e.g., 21, 22, etc.). Please follow this
 pattern.

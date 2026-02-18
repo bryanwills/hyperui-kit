@@ -8,7 +8,7 @@ Thank you for your interest in improving HyperUI. For full contribution guidelin
 git clone git@github.com:markmead/hyperui.git
 pnpm install
 pnpm dev
-pnpm css --watch
+pnpm run css --watch
 ```
 
 ## Bug? Idea?
