@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 
-import { SEO_DESCRIPTION_SITE, SEO_TITLE_SITE } from '../consts'
+import { SEO_TITLE_SITE, SEO_DESCRIPTION_SITE } from '../consts'
 
 import BaseAd from '../components/BaseAd.astro'
 import BaseLayout from '../layouts/BaseLayout.astro'
@@ -17,17 +17,19 @@ const application = applicationRaw
   .map(({ data }) => data)
   .sort((a, b) => a.title.localeCompare(b.title))
   .slice(0, 9)
+
 const marketing = marketingRaw
   .map(({ data }) => data)
   .sort((a, b) => a.title.localeCompare(b.title))
   .slice(0, 9)
+
 const neobrutalism = neobrutalismRaw
   .map(({ data }) => data)
   .sort((a, b) => a.title.localeCompare(b.title))
   .slice(0, 9)
 ---
 
-<BaseLayout description={SEO_DESCRIPTION_SITE} title={SEO_TITLE_SITE}>
+<BaseLayout title={SEO_TITLE_SITE} description={SEO_DESCRIPTION_SITE}>
   <section class="bg-white">
     <div class="mx-auto max-w-4xl space-y-6 px-4 py-8 text-center md:py-16">
       <h1 class="text-6xl font-medium tracking-tight md:text-7xl lg:text-8xl">HyperUI</h1>

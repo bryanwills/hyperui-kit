@@ -4,16 +4,16 @@ import Analytics from '@vercel/analytics/astro'
 import BaseHead from '../components/BaseHead.astro'
 
 interface Props {
-  description: string
   title: string
+  description: string
 }
 
-const { description, title } = Astro.props
+const { title, description } = Astro.props
 ---
 
 <html lang="en" class="scroll-pt-16 scroll-smooth">
   <head>
-    <BaseHead ads={false} description={description} title={title} />
+    <BaseHead ads={false} title={title} description={description} />
 
     <slot name="head" />
   </head>

@@ -6,17 +6,17 @@ import SiteFooter from '../components/SiteFooter.astro'
 import BaseHead from '../components/BaseHead.astro'
 
 interface Props {
-  description: string
   title: string
+  description: string
   ads?: boolean
 }
 
-const { description, title, ads = true } = Astro.props
+const { title, description, ads = true } = Astro.props
 ---
 
 <html lang="en" class="scroll-pt-16 scroll-smooth">
   <head>
-    <BaseHead ads={ads} description={description} title={title} />
+    <BaseHead ads={ads} title={title} description={description} />
 
     <slot name="head" />
   </head>

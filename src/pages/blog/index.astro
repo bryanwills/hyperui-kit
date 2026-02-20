@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 
-import { SEO_DESCRIPTION_BLOG, SEO_TITLE_BLOG } from '../../consts'
+import { SEO_TITLE_BLOG, SEO_DESCRIPTION_BLOG } from '../../consts'
 
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import BaseHero from '../../components/BaseHero.astro'
@@ -12,7 +12,7 @@ const posts = (await getCollection('blog')).sort(
 )
 ---
 
-<BaseLayout description={SEO_DESCRIPTION_BLOG} title={SEO_TITLE_BLOG}>
+<BaseLayout title={SEO_TITLE_BLOG} description={SEO_DESCRIPTION_BLOG}>
   <BaseHero
     title="Tailwind CSS Blog"
     description="Tips, tricks and real-world solutions for working with Tailwind CSS"
