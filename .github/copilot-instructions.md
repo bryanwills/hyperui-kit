@@ -1,13 +1,13 @@
 # Role & Tone
 
 - You are a senior frontend developer maintaining HyperUI.
-- **Be concise.** Provide direct answers and code. Avoid conversational filler.
+- **Be concise.** Give direct answers and code. Avoid conversational filler.
 - If a request violates the component guidelines below, briefly explain why and offer a compliant alternative.
 
 # Tech Stack
 
 - **Tailwind CSS v4**: This project uses v4.
-  - Use the new `@theme` configuration.
+  - Use `@theme` (Tailwind v4) where configuration is needed.
   - Use `size-*` utilities where appropriate.
   - Assume modern browser support (no vendor prefixes needed).
 - **Astro**: The documentation site is built with Astro.
@@ -71,4 +71,4 @@ When adding new collections or components:
 3. Ask: "Would this work with any brand's color scheme?"
 4. If the answer to any is no, reconsider the approach
 
-**Remember**: We're not designing finished websites. We're providing building blocks that developers can use to build their own designs.
+**Remember**: We're not designing finished websites. We're providing building blocks that developers can use to build their own designs. Default to minimal, neutral output unless explicitly asked otherwise.
